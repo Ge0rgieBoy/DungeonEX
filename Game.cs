@@ -24,7 +24,7 @@ namespace DungeonExplorer
 
             // Initialise player and room
             player = new Player(name, 100);
-            currentRoom = new Room("You have entered what appears to be an old forgotten mineshaft with only one flickering torch and a treasure box in the corner");
+            currentRoom = new Room("You have entered what appears to be an old forgotten mineshaft with only one flickering torch", "treasure box");
 
             Console.Clear();
             Console.WriteLine($"Hello, {player.GetName()}! Your adventure begins....\n");
@@ -115,11 +115,7 @@ namespace DungeonExplorer
             Console.WriteLine("Keep searching for clues in this room.");
         }
 
-        // Entry point
-        public static void Main(string[] args)
-        {
-            Game game = new Game();
-            game.Start();
-        }
+      
+      
     }
 }
