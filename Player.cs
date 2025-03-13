@@ -3,13 +3,21 @@ using System.Collections.Generic;
 
 namespace DungeonExplorer
 {
+    /// <summary>
+    /// Represents player in dungeon crawler.
+    /// Tracks player's name, health, and inventory item.
+    /// </summary>
     public class Player
     {
         public string name;
         public int health;
         private string inventoryItem;
 
-        // Stating players name, health, and empty inventory
+        /// <summary>
+        /// States there is a new instance of the <see cref="Player"/> class.
+        /// </summary>
+        /// <param name="name">The name of the player.</param>
+        /// <param name="health">The starting health of the player.</param>
         public Player(string name, int health)
         {
             this.name = name;
@@ -17,19 +25,22 @@ namespace DungeonExplorer
             this.inventoryItem = null;
         }
 
-        // Gets player name
+        
         public string GetName()
         {
             return name;
         }
 
-        // Gets player current health
+
         public int GetHealth()
         {
             return health;
         }
 
-        // Attempt at picking up an item if empty inventory
+        /// <summary>
+        /// Adds item to players inventory if empty.
+        /// </summary>
+        /// <param name="item">The item that can be picked up.</param>
         public void PickUpItem(string item)
         {
             if (inventoryItem == null)
@@ -43,7 +54,9 @@ namespace DungeonExplorer
             }
         }
 
-        // Displays players name, health, and inventory status
+        /// <summary>
+        /// Displays players current status this being name, health, and inventory item.
+        /// </summary>
         public void ShowStatus()
         {
             Console.WriteLine($"Player: {name}");

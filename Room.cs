@@ -1,30 +1,40 @@
 ﻿namespace DungeonExplorer
 {
+    /// <summary>
+    /// Represents single room in a dungeon with descriptions and an optional item.
+    /// </summary>
     public class Room
     {
         private string description;
         private string item;
 
-        // States the room's description and item
+        /// <summary>
+        /// States new instance of <see cref="Room"/> class.
+        /// </summary>
+        /// <param name="description">Description of the room.</param>
+        /// <param name="item">item present in room.</param>
         public Room(string description, string item)
         {
             this.description = description;
             this.item = item;
         }
 
-        // Returns room descritpion 
+        /// <summary>
+        /// Gets description of room.
+        /// </summary>
+        /// <returns>Description string.</returns>
         public string GetDescription()
         {
             return description;
         }
 
-        // Returns item in current room (if any)
+        
         public string GetItem()
         {
             return item;
         }
 
-        // Removes and returns item from room
+        
         public string TakeItem()
         {
             string temp = item;
@@ -32,7 +42,10 @@
             return temp;
         }
 
-        // See's if there is currently an item in the room 
+        /// <summary>
+        /// checks whether room contains an item.
+        /// </summary>
+        /// <returns>true</returns> if item is present; otherwise, <c>false</c>.</returns>
         public bool HasItem()
         {
             return item != null;

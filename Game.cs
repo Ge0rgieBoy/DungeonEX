@@ -3,33 +3,39 @@ using System.Media;
 
 namespace DungeonExplorer
 {
+    /// <summary>
+    /// Handles main flow of dungeon crawler game.
+    /// Initialises player and starting room, manages user interaction.
+    /// </summary>
     public class Game
     {
         private Player player;
         private Room currentRoom;
 
-        // Starts the game and handles the main game loop
+        /// <summary>
+        /// Starts game manages game loop.
+        /// </summary>
         public void Start()
         {
             Console.WriteLine("Welcome. You Have entered the Dungeon Exploration");
             Console.WriteLine("Enter player name: ");
             string name = Console.ReadLine();
 
-            // Default player name if none entered
+            
             if (string.IsNullOrWhiteSpace(name))
             {
                 name = "Adventurer";
                 Console.WriteLine("No Name Entered. Name: 'Adventurer'.");
             }
 
-            // Initialise player and room
+            
             player = new Player(name, 100);
             currentRoom = new Room("You have entered what appears to be an old forgotten mineshaft with only one flickering torch", "treasure box");
 
             Console.Clear();
             Console.WriteLine($"Hello, {player.GetName()}! Your adventure begins....\n");
 
-            // Main game loop
+            
             bool isRunning = true;
             while (isRunning)
             {
@@ -72,7 +78,7 @@ namespace DungeonExplorer
                 }
             }
 
-            // Change the playing logic into true and populate the while loop
+            
             bool playing = false;
             while (playing)
             {
@@ -80,7 +86,9 @@ namespace DungeonExplorer
             }
         }
 
-        // Displays room description and item (if any)
+        /// <summary>
+        /// Displays current room description and any items.
+        /// </summary>
         private void ShowRoomDescription()
         {
             Console.WriteLine("\n" + currentRoom.GetDescription());
@@ -94,7 +102,9 @@ namespace DungeonExplorer
             }
         }
 
-        // Attempt at picking an item from the room
+        /// <summary>
+        /// Trys to pick up item from room and adds to players inventory.
+        /// </summary>
         private void TryPickUpItem()
         {
             if (currentRoom.HasItem())
@@ -108,7 +118,9 @@ namespace DungeonExplorer
             }
         }
 
-        // Placeholder for room navigation
+        /// <summary>
+        /// Handles player attempt at moving to another room.
+        /// </summary>
         private void TryMoveToRoom()
         {
             Console.WriteLine("There are no other rooms.");
