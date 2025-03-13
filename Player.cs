@@ -9,6 +9,7 @@ namespace DungeonExplorer
         public int health;
         private string inventoryItem;
 
+        // Stating players name, health, and empty inventory
         public Player(string name, int health)
         {
             this.name = name;
@@ -16,16 +17,19 @@ namespace DungeonExplorer
             this.inventoryItem = null;
         }
 
+        // Gets player name
         public string GetName()
         {
             return name;
         }
 
+        // Gets player current health
         public int GetHealth()
         {
             return health;
         }
 
+        // Attempt at picking up an item if empty inventory
         public void PickUpItem(string item)
         {
             if (inventoryItem == null)
@@ -39,6 +43,7 @@ namespace DungeonExplorer
             }
         }
 
+        // Displays players name, health, and inventory status
         public void ShowStatus()
         {
             Console.WriteLine($"Player: {name}");
