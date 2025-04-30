@@ -1,54 +1,78 @@
-﻿namespace DungeonExplorer
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace DungeonExplorer
 {
     /// <summary>
-    /// Represents single room in a dungeon with descriptions and an optional item.
+    ///  Represents a room in the dungeon with a description, items, and monsters.
     /// </summary>
     public class Room
     {
-        private string description;
-        private string item;
+        public string Description { get; private set; }
+        private List<Item> items;
+        private List<Monster> monsters;
+	
 
-        /// <summary>
-        /// States new instance of <see cref="Room"/> class.
-        /// </summary>
-        /// <param name="description">Description of the room.</param>
-        /// <param name="item">item present in room.</param>
-        public Room(string description, string item)
+	public Room(string description)
         {
-            this.description = description;
-            this.item = item;
+            Description = description;
+            items = new List<Item>();
+            monsters = new List<Monster>();
         }
 
-        /// <summary>
-        /// Gets description of room.
-        /// </summary>
-        /// <returns>Description string.</returns>
-        public string GetDescription()
+        public void AddItem(Item item) => items.Add(item);
+        public void AddMonster(Monster monster) => monsters.Add(monster);
+
+        public void ShowDescription()
         {
-            return description;
+            Console.WriteLine(Description);
+
+            if (items.Any())
+            {
+                Console.WriteLine("You stumble apon the following items:");
+                foreach (var item in items)
+                    Console.WriteLine($" - {item.Name}");
+
+            }
+            else
+            {
+                Console.WriteLine("There are no items in this room.");
+            }
+
+            if (monsters.Any())
+            {
+                Console.WriteLine("Monsters in the room:");
+                foreach (var monster in monsters)
+                    Console.WriteLine($" - {monster.Name} (HP: {monster.Health})");
+            }
+            else
+            {
+                Console.WriteLine("The room is eerily quiet... suspisious");
+            }
         }
 
-        
-        public string GetItem()
+        public Item TakeItem(string itemName)
         {
-            return item;
+            var item = items.FirstOrDefault(i => i.Name.Equals(itemName, StringComparison.OrdinalIgnoreCase));
+            if (item != null)
+            {
+                items.Remove(item);
+                return item;
+            }
+
+            Console.WriteLine("That item isn't in this room.");
+            return null;
         }
 
-        
-        public string TakeItem()
+        public List<Monster> GetMonsters()
         {
-            string temp = item;
-            item = null;
-            return temp;
+            return monsters;
         }
 
-        /// <summary>
-        /// checks whether room contains an item.
-        /// </summary>
-        /// <returns>true</returns> if item is present; otherwise, <c>false</c>.</returns>
-        public bool HasItem()
+        public void RemoveDeadMonsters()
         {
-            return item != null;
+            monsters.RemoveAll(monsters => !monsters.IsAlive);
         }
     }
 }
