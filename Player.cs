@@ -1,68 +1,53 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace DungeonExplorer
 {
-    /// <summary>
-    /// Represents player in dungeon crawler.
-    /// Tracks player's name, health, and inventory item.
-    /// </summary>
-    public class Player
+    public class Player : Creature
     {
-        public string name;
-        public int health;
-        private string inventoryItem;
+        public Inventory Inventory { get; private set; }
 
-        /// <summary>
-        /// States there is a new instance of the <see cref="Player"/> class.
-        /// </summary>
-        /// <param name="name">The name of the player.</param>
-        /// <param name="health">The starting health of the player.</param>
-        public Player(string name, int health)
+        public Player(string name, int health) : base(name, health)
         {
-            this.name = name;
-            this.health = health;
-            this.inventoryItem = null;
+            Inventory = new Inventory();
         }
 
-        
-        public string GetName()
+        public override void Attack(Creature target)
         {
-            return name;
-        }
+            var weapons = Inventory.GetWeapons().ToList();
 
-
-        public int GetHealth()
-        {
-            return health;
-        }
-
-        /// <summary>
-        /// Adds item to players inventory if empty.
-        /// </summary>
-        /// <param name="item">The item that can be picked up.</param>
-        public void PickUpItem(string item)
-        {
-            if (inventoryItem == null)
+            if (weapons.Count == 0)
             {
-                inventoryItem = item;
-                Console.WriteLine($"You pick up {item}.");
+                Console.WriteLine(" You have no available weapons to attack with!");
+                return;
+            }
+
+            Console.WriteLine("Choose a weapon to attack with:");
+            for (int i = 0; i < weapons.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {weapons[i].Name} (Damage: {weapons[i].Damage})");
+            }
+
+            if (int.TryParse(Console.ReadLine(), out int choice) &&
+                choice >= 1 && choice <= weapons.Count)
+            {
+                var weapon = weapons[choice - 1];
+                Console.WriteLine($"{Name} Attacked With {weapon.Name}!");
+                target.TakeDamage(weapon.Damage);
             }
             else
             {
-                Console.WriteLine("Inventory full. Max of one item allowed to be carried per room");
+                Console.WriteLine("Invalid Choice Try Again");
             }
         }
 
-        /// <summary>
-        /// Displays players current status this being name, health, and inventory item.
-        /// </summary>
-        public void ShowStatus()
+        public void Heal(int amount)
         {
-            Console.WriteLine($"Player: {name}");
-            Console.WriteLine($"Health: {health}");
-            Console.WriteLine($"Inventory: {(inventoryItem ?? "Empty")}");
+            if (amount > 0)
+            {
+                Health += amount;
+                Console.WriteLine($"{Name} healed by {amount}. Current health; {Health}");
+            }
         }
-        
     }
 }

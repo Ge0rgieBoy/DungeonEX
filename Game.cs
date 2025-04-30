@@ -1,133 +1,161 @@
 ﻿using System;
-using System.Media;
+using System.Linq;
 
 namespace DungeonExplorer
 {
-    /// <summary>
-    /// Handles main flow of dungeon crawler game.
-    /// Initialises player and starting room, manages user interaction.
-    /// </summary>
-    public class Game
-    {
-        private Player player;
-        private Room currentRoom;
+	public class Game
+	{
+		private Player player;
+		private Room currentRoom;
+		private GameMap gameMap;
 
-        /// <summary>
-        /// Starts game manages game loop.
-        /// </summary>
-        public void Start()
-        {
-            Console.WriteLine("Welcome. You Have entered the Dungeon Exploration");
-            Console.WriteLine("Enter player name: ");
-            string name = Console.ReadLine();
+		public void Start()
+		{
+			Console.WriteLine("Welcome. You Have entered the Dungeon Exploration");
+			Console.Write("Enter your name explorer: ");
+			string name = Console.ReadLine();
+			name = string.IsNullOrWhiteSpace(name) ? "Adventurer" : name;
 
-            
-            if (string.IsNullOrWhiteSpace(name))
+			player = new Player(name, 100);
+			gameMap = new GameMap();
+			gameMap.Initialize();
+
+
+			currentRoom = gameMap.StartingRoom;
+			Console.WriteLine($"\nWelcome, {player.Name}! Your adventure begins...\n");
+
+			bool running = true;
+			while (running)
+			{
+				Console.WriteLine("\nOptions:");
+				Console.WriteLine("1, View Room Description");
+				Console.WriteLine("2. Pick Up Item");
+				Console.WriteLine("3. View Inventory");
+				Console.WriteLine("4. Use Item");
+				Console.WriteLine("5. Fight Monster");
+				Console.WriteLine("6. Move to Another Room");
+				Console.WriteLine("7. Exit Game");
+				Console.Write("Choice: ");
+
+				switch (Console.ReadLine())
+				{
+					case "1":
+						currentRoom.ShowDescription();
+						break;
+
+					case "2":
+						PickUpItem();
+						break;
+
+					case "3":
+						player.Inventory.ShowInventory();
+						break;
+
+					case "4":
+						UseItem();
+						break;
+
+					case "5":
+						FightMonster();
+						break;
+
+					case "6":
+						MoveToNextRoom();
+						break;
+
+					case "7":
+						Console.WriteLine("I hope to see you again explorer");
+						running = false;
+						break;
+
+					default:
+						Console.WriteLine("Invalid Choice");
+						break;
+				}
+
+            } 
+		}
+
+		private void PickUpItem()
+		{
+			Console.Write("Enter item name to Pick up: ");
+			string itemName = Console.ReadLine();
+			var item = currentRoom.TakeItem(itemName);
+			if(item != null )
+			{
+				player.Inventory.AddItem(item);
+			}
+		}
+
+		private void UseItem()
+		{
+			Console.WriteLine("Enter item name to use");
+			string name = Console.ReadLine();
+			player.Inventory.UseItem(name, player);
+		}
+
+		private void FightMonster()
+		{
+			var monsters = currentRoom.GetMonsters();
+			if (!monsters.Any())
+			{
+				Console.WriteLine("No Monsters in this room");
+				return;
+			}
+
+			Console.WriteLine("choose a monster to attack:");
+			for(int i = 0; i < monsters.Count; i++)
+			{
+				Console.WriteLine($"{i + 1}. {monsters[i].Name} (HP: {monsters[i].Health})");
+			}
+
+			if (int.TryParse(Console.ReadLine(), out int choice) && choice > 0 && choice <= monsters.Count)
+			{
+				var target = monsters[choice - 1];
+				player.Attack(target);
+				if (target.IsAlive)
+				{
+					target.Attack(player);
+				}
+				else
+				{
+					Console.WriteLine($"{target.Name} has been defeated!");
+					currentRoom.RemoveDeadMonsters();
+				}
+
+				if (!player.IsAlive)
+				{
+					Console.WriteLine("You have Died. Game Over");
+					Environment.Exit(0);
+				}
+			}
+			else
+			{
+				Console.WriteLine("Invalid Monster");
+			}
+		}
+
+		private void MoveToNextRoom()
+		{
+			var adjacentRooms = gameMap.GetAdjacentRooms(currentRoom);
+
+			Console.WriteLine("\nAvailable Rooms:");
+			for (int i = 0; i < adjacentRooms.Count; i++)
+			{
+				Console.WriteLine($"{i + 1}. {adjacentRooms[i].Description}");
+			}
+
+			Console.Write("Choose a room to enter: ");
+            if (int.TryParse(Console.ReadLine(), out int choice) &&
+                choice >= 1 && choice <= adjacentRooms.Count)
             {
-                name = "Adventurer";
-                Console.WriteLine("No Name Entered. Name: 'Adventurer'.");
-            }
-
-            
-            player = new Player(name, 100);
-            currentRoom = new Room("You have entered what appears to be an old forgotten mineshaft with only one flickering torch", "treasure box");
-
-            Console.Clear();
-            Console.WriteLine($"Hello, {player.GetName()}! Your adventure begins....\n");
-
-            
-            bool isRunning = true;
-            while (isRunning)
-            {
-                Console.WriteLine("\nWhere would you like to start?");
-                Console.WriteLine("1. Get Room Description");
-                Console.WriteLine("2. Pick up item in the corner");
-                Console.WriteLine("3. View your Player Status");
-                Console.WriteLine("4. Enter Next Room");
-                Console.WriteLine("5. Exit Game");
-
-                Console.WriteLine("Enter choice (1-4); ");
-                string input = Console.ReadLine();
-
-                switch (input)
-                {
-                    case "1":
-                        ShowRoomDescription();
-                        break;
-
-                    case "2":
-                        TryPickUpItem();
-                        break;
-
-                    case "3":
-                        player.ShowStatus();
-                        break;
-
-                    case "4":
-                        TryMoveToRoom();
-                        break;
-
-                    case "5":
-                        isRunning = false;
-                        Console.WriteLine("Come back soon and enjoy the deep depths another time.");
-                        break;
-
-                    default:
-                        Console.WriteLine("Invalid option. Try entering an number from 1 - 5.");
-                        break;
-                }
-            }
-
-            
-            bool playing = false;
-            while (playing)
-            {
-                // Code your playing logic here
-            }
-        }
-
-        /// <summary>
-        /// Displays current room description and any items.
-        /// </summary>
-        private void ShowRoomDescription()
-        {
-            Console.WriteLine("\n" + currentRoom.GetDescription());
-            if (currentRoom.HasItem())
-            {
-                Console.WriteLine($"You find a {currentRoom.GetItem()} in the corner of the room.");
+                currentRoom = adjacentRooms[choice - 1];
+                Console.WriteLine($"You move to: {currentRoom.Description}");
             }
             else
             {
-                Console.WriteLine("There is nothing else to pick up");
+                Console.WriteLine("Invalid room selection.");
             }
         }
-
-        /// <summary>
-        /// Trys to pick up item from room and adds to players inventory.
-        /// </summary>
-        private void TryPickUpItem()
-        {
-            if (currentRoom.HasItem())
-            {
-                string item = currentRoom.TakeItem();
-                player.PickUpItem(item);
-            }
-            else
-            {
-                Console.WriteLine("No item appears to be here.");
-            }
-        }
-
-        /// <summary>
-        /// Handles player attempt at moving to another room.
-        /// </summary>
-        private void TryMoveToRoom()
-        {
-            Console.WriteLine("There are no other rooms.");
-            Console.WriteLine("Keep searching for clues in this room.");
-        }
-
-      
-      
-    }
+	}
 }
