@@ -5,6 +5,7 @@ namespace DungeonExplorer
 	public class GameMap
 	{
 		private Dictionary<string, Room> rooms = new();
+
 		public Room StartingRoom => rooms.Count > 0 ? rooms.Values.First() : null;
 
 		public void Initialize()
@@ -22,9 +23,14 @@ namespace DungeonExplorer
 			AddRoom("Treasure", room3);
 		}
 
+		public void AddRoom(string name, Room room)
+		{
+			rooms[name] = room;
+		}
+
 		public List<Room> GetAdjacentRooms(Room current)
 		{
-			return new List<Room>(rooms.Value);
+			return rooms.Values.Where(rooms => rooms != current).ToList();
 		}
 
 
