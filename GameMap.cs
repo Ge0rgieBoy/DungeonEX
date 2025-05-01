@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DungeonExplorer
 {
 	public class GameMap
 	{
-		private Dictionary<string, Room> rooms = new();
+		private Dictionary<string, Room> rooms = new Dictionary<string, Room>();
 
 		public Room StartingRoom => rooms.Count > 0 ? rooms.Values.First() : null;
 
@@ -14,7 +16,7 @@ namespace DungeonExplorer
 			var room2 = new Room("Dark corridor.");
 			var room3 = new Room("Treasure Room!");
 
-			room1.AddItem(new Weapon("Sword," 10));
+			room1.AddItem(new Weapon("Sword", 10));
 			room2.AddMonster(new Monster("Slime", 30, 5));
 			room3.AddItem(new Potion("Health Potion", 20));
 

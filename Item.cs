@@ -13,10 +13,4 @@ namespace DungeonExplorer
 
 		public abstract void Use(Player player); 
 	}
-
-	public interface ICollectable
-	{
-		string Name { get; }
-		void Use(Player player);
-	}
 }

@@ -7,6 +7,7 @@ namespace DungeonExplorer
     {
         public Inventory Inventory { get; private set; }
 
+
         public Player(string name, int health) : base(name, health)
         {
             Inventory = new Inventory();
