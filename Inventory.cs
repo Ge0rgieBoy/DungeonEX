@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collection.Genric;
+using System.Collection.Generic;
 using System.Linq;
 
 namespace DungeonExplorer
 {
 	public class Inventory
 	{
-		private List<Item> items = new 
+		private List<Item> items = new List<Item>();
 
 		public void AddItem(Item item)
 		{
