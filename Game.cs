@@ -140,14 +140,14 @@ namespace DungeonExplorer
 			var adjacentRooms = gameMap.GetAdjacentRooms(currentRoom);
 
 			Console.WriteLine("\nAvailable Rooms:");
-			for (int i = 0; i < adjacentRooms.Count; i++)
+			for (int i = 0; i < adjacentRooms.Count(); i++)
 			{
 				Console.WriteLine($"{i + 1}. {adjacentRooms[i].Description}");
 			}
 
 			Console.Write("Choose a room to enter: ");
             if (int.TryParse(Console.ReadLine(), out int choice) &&
-                choice >= 1 && choice <= adjacentRooms.Count)
+                choice >= 1 && choice <= adjacentRooms.Count())
             {
                 currentRoom = adjacentRooms[choice - 1];
                 Console.WriteLine($"You move to: {currentRoom.Description}");

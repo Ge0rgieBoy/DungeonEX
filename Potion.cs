@@ -14,14 +14,14 @@ namespace DungeonExplorer
 		public override void Use(Player player)
 		{
 			player.Heal(HealAmount);
-			Console.WriteLine($"You used {name} amd restored {HealAmount} health.");
+			Console.WriteLine($"You used {Name} amd restored {HealAmount} health.");
 		}
 
-		public void ShowStatus()
+		public void ShowStatus(Player player)
 		{
-			Console.WriteLine($"Player: {Name}");
-			Console.WriteLine($"Health; {Health}";
-			Inventory.ShowItems();
+			Console.WriteLine($"Player: {player.Name}");
+			Console.WriteLine($"Health; {player.Health}");
+			player.Inventory.ShowInventory();
 		}
 	}
 }

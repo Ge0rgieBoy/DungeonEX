@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collection.Generic;
+using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 
 namespace DungeonExplorer
@@ -16,7 +17,7 @@ namespace DungeonExplorer
 
 		public void ShowInventory()
 		{
-			if (!items.Any()) ;
+			if (!items.Any())
 			{
 				Console.WriteLine($"Inventory is empty.");
 				return;
@@ -33,7 +34,7 @@ namespace DungeonExplorer
         public IEnumerable<Potion> GetPotion() => items.OfType<Potion>();
 
 		public Item GetItemByName(string name) =>
-			items.FirstOrDefault(items => i.Names.Equals(name, StringComparison.OrdinalIgnoreCase));
+			items.FirstOrDefault(i => i.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
 		public void UseItem(string name, Player player)
 		{
@@ -47,6 +48,11 @@ namespace DungeonExplorer
 			{
 				Console.WriteLine("Item not found in inventory");
 			}
+		}
+
+		public IEnumerable<Weapon> GetWeapons()
+		{
+			return items.OfType<Weapon>();
 		}
 	}
 }

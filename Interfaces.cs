@@ -7,7 +7,7 @@ namespace DungeonExplorer
 		void TakeDamage(int amount);
 	}
 
-	public interface ICollectible
+	public interface ICollectable
 	{
 		string Name { get; }
 		void Use(Player player);
